@@ -1,8 +1,6 @@
 ## Description
 
-  Apenas uma tentativa de aprender e execitar dois frameworks novos:
-    - Uma API em Nestjs + TypeORM
-    - Uma intreface com React + Redux + Semantic UI
+  Um sistema simples para organização e automação de estoque/livraria.
 
 ## Installation
 
@@ -25,10 +23,6 @@ $ yarn start
 # watch mode
 $ yarn start:dev
 
-# production mode
-$ yarn start:prod
-```
-
 ## Test
 
 ```bash
@@ -41,11 +35,3 @@ $ yarn test:e2e
 # test coverage
 $ yarn test:cov
 ```
-
-## Document DB
-
-  Essas são as relações iniciais que estipulei que poderia ser interessante, para uma versão inicial funcional sem login.
-
-## License
-
-Ainda não possue licença e tals.
