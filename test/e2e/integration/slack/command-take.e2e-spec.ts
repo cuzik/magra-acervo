@@ -42,12 +42,6 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
     await app.init();
   });
 
-  beforeEach(async () => {
-    await getRepository(Reservation).clear();
-    await getRepository(BookCopy).delete({});
-    await getRepository(Book).delete({});
-  });
-
   it('should return correct error message when pass invalid serial number', async () => {
     data = {
       user_name: 'fulaninho.42',

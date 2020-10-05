@@ -9,7 +9,7 @@ import { BookCopy } from '../../../../src/modules/book/book-copy.entity';
 import { Reservation } from '../../../../src/modules/reservation/reservation.entity';
 import { ReservationStatus } from '../../../../src/modules/reservation/reservation.interface';
 
-describe('SlackController (e2e) POST /integration/slack with return command', () => {
+describe('SlackController (e2e) POST /integration/slack with consult command', () => {
   let app: INestApplication;
   let data: { user_name: string, text: string };
 
@@ -45,7 +45,7 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
   it('should return correct error message when pass invalid serial number', async () => {
     data = {
       user_name: 'fulaninho.42',
-      text: `return A8kf0-33`
+      text: `consult A8kf0-33`
     };
 
     const { text } = await request(app.getHttpServer())
@@ -56,15 +56,11 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
     expect(text).toEqual('O serial_number A8kf0-33 não está cadastrado.');
   });
 
-  it('should return erros message when try return command without serial_number', async () => {
+  it('should return erros message when try consult command without serial_number', async () => {
     data = {
       user_name: 'ciclaninho.42',
-      text: 'return'
+      text: 'consult'
     };
-
-    let reservations = await getRepository(Reservation).count({user_name: data.user_name});
-
-    expect(reservations).toEqual(0);
 
     const { text } = await request(app.getHttpServer())
       .post('/integration/slack')
@@ -72,39 +68,31 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
       .expect(200);
 
     expect(text).toEqual('Comando inválido veja mais em `/acervo help`.');
-
-    reservations = await getRepository(Reservation).count({user_name: data.user_name});
-
-    expect(reservations).toEqual(0);
   });
 
-  it('should return correct message and finish reservation', async () => {
+  it('should return correct message when try consult an unavailable book', async () => {
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'ciclaninho.42',
-      text: `return ${serial_number}`
+      text: `consult ${serial_number}`
     };
 
     await createBookCopy(serial_number);
-    await createReservation(data.user_name, serial_number);
+    await createReservation('usuario.one', serial_number);
 
     const { text } = await request(app.getHttpServer())
       .post('/integration/slack')
       .send(data)
       .expect(200);
 
-    expect(text).toEqual('ciclaninho.42 você realizou a devolução do livro.');
-
-    const reservation = await getRepository(Reservation).findOne({user_name: data.user_name});
-
-    expect(reservation.status).toEqual(ReservationStatus.returned);
+    expect(text).toEqual('Este livro está com usuario.one.');
   });
 
-  it('should return correct message whe try return before take a book', async () => {
+  it('should return correct message when try consult an available book', async () => {
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'ciclaninho.42',
-      text: `return ${serial_number}`
+      text: `consult ${serial_number}`
     };
 
     await createBookCopy(serial_number);
@@ -114,25 +102,7 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
       .send(data)
       .expect(200);
 
-    expect(text).toEqual('Não há registro de retirada desse livro no momento.');
-  });
-
-  it('should return correct message whe try return a book that another user taked', async () => {
-    const serial_number = '9PK7JS7';
-    data = {
-      user_name: 'ciclaninho.42',
-      text: `return ${serial_number}`
-    };
-
-    await createBookCopy(serial_number);
-    await createReservation('fulano.100', serial_number);
-
-    const { text } = await request(app.getHttpServer())
-      .post('/integration/slack')
-      .send(data)
-      .expect(200);
-
-    expect(text).toEqual('Este livro está com fulano.100.');
+    expect(text).toEqual('O livro está disponível.');
   });
 
   afterEach(async () => {
