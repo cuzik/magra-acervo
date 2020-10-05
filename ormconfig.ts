@@ -5,7 +5,8 @@ module.exports = isProd ? {
   entities: [
     `${__dirname}/dist/**/*.entity{.ts,.js}`
   ],
-  url: process.env.DATABASE_URL
+  url: process.env.DATABASE_URL,
+  'synchronize': true
 } : {
   'name': 'default',
   'type': 'postgres',
