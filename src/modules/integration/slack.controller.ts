@@ -5,8 +5,6 @@ import { Request } from 'express';
 export class SlackController {
   @Post()
   actionBot(@Req() request: Request): string {
-    console.log(request.body)
-
-    return request.body;
+    return JSON.stringify(request.body);
   }
 }
