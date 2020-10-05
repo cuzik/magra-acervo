@@ -4,28 +4,28 @@
 
 ## Installation
 
-```bash
+```sh
 $ yarn
 ```
 
 ## Up DB
 
-```
+```sh
 $ yarn dev:up
 ```
 
 ## Running the app
 
-```bash
+```sh
 # development
 $ yarn start
-
 # watch mode
 $ yarn start:dev
+```
 
 ## Test
 
-```bash
+```sh
 # unit tests
 $ yarn test
 
@@ -35,3 +35,9 @@ $ yarn test:e2e
 # test coverage
 $ yarn test:cov
 ```
+
+## Usage
+
+| Command | params | Description |
+|---------|---|---|
+| help | - | return a list of command and usage |
