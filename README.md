@@ -38,6 +38,7 @@ $ yarn test:cov
 
 ## Usage
 
-| Command | params | Description |
-|---------|---|---|
-| help | - | return a list of command and usage |
+| Command | params | Description | Usage |
+|---------|---|---|---|
+| help | - | return a list of command and usage | /acervo help |
+| take | book | return a list of command and usage | /acervo take <serial_number> |
