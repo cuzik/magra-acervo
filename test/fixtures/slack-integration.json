@@ -1,0 +1,14 @@
+{
+  "token": "VEutVLaev8RjaVCrUK8zZibl",
+  "team_id": "T3J35UJPM",
+  "team_domain": "magrathealabs",
+  "channel_id": "D74Q0DHMX",
+  "channel_name": "directmessage",
+  "user_id": "U74Q0DFS5",
+  "user_name": "carlos.cuzik",
+  "command": "/acervo",
+  "text": "",
+  "api_app_id": "A01BGG3GWG7",
+  "response_url": "https://hooks.slack.com/commands/T3J35UJPM/1405958414642/sXkg1nYQiSixiTHxpjrgTOMd",
+  "trigger_id": "1406165838451.120107970803.993bf0bfcf59757f477319563dacaee3"
+}

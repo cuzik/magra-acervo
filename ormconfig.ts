@@ -7,7 +7,7 @@ module.exports = isProd ? {
   ],
   url: process.env.DATABASE_URL
 } : {
-  'name': process.env.NODE_ENV == 'test' ? 'test' : 'default',
+  'name': 'default',
   'type': 'postgres',
   'host': 'localhost',
   'port': 5432,
