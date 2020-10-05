@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { ReturnService } from './return/return.service';
 import { TakeService } from './take/take.service';
 
 @Injectable()
 export class SlackService {
   constructor(
-    private takeService: TakeService
+    private takeService: TakeService,
+    private returnService: ReturnService
   ) {}
 
   public validateCommand(command :string): boolean {
@@ -20,6 +22,10 @@ export class SlackService {
 
     if (command_name == 'take') {
       return this.takeService.run(user_name, command)
+    }
+
+    if (command_name == 'return') {
+      return this.returnService.run(user_name, command)
     }
 
     return `${user_name} o comando /${command_name} não é valido.`;
