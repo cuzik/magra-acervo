@@ -15,7 +15,7 @@ export class SlackController {
     const is_valid = this.slackService.validateCommand(body.text)
 
     if(!is_valid) {
-      return 'invalid command see more in `/acervo help`';
+      return 'Comando inválido veja mais em `/acervo help`';
     }
 
     return this.slackService.runCommand(body.user_name, body.text)

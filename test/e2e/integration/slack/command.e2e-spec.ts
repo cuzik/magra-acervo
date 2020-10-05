@@ -67,7 +67,7 @@ describe('SlackController (e2e)', () => {
       .send(data)
       .expect(200);
 
-    expect(text).toEqual('invalid command see more in `/acervo help`');
+    expect(text).toEqual('Comando inválido veja mais em `/acervo help`');
   });
 
   describe('POST /integration/slack with take command', () => {
@@ -109,7 +109,29 @@ describe('SlackController (e2e)', () => {
       expect(reservations).toEqual(1);
     });
 
-    it('should return erros message when try take an unavailable book', async () => {
+    it('should return erros message when try take command without serial_number', async () => {
+      data = {
+        user_name: 'ciclaninho.42',
+        text: `take`
+      };
+
+      let [_, reservations] = await getRepository(Reservation).findAndCount({user_name: data.user_name});
+
+      expect(reservations).toEqual(0);
+
+      const { text } = await request(app.getHttpServer())
+        .post('/integration/slack')
+        .send(data)
+        .expect(200);
+
+      expect(text).toEqual('Comando inválido veja mais em `/acervo help`.');
+
+      [_, reservations] = await getRepository(Reservation).findAndCount({user_name: data.user_name});
+
+      expect(reservations).toEqual(0);
+    });
+
+    xit('should return erros message when try take an unavailable book', async () => {
       const serial_number = '9PK7JS7';
       data = {
         user_name: 'ciclaninho.42',

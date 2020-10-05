@@ -37,6 +37,10 @@ export class SlackService {
   }
 
   private async takeCommand(user_name: string, command :string): Promise<string> {
+    if (command == 'take') {
+      return 'Comando inválido veja mais em `/acervo help`.';
+    }
+
     const serial_number = command.replace('take ', '');
     const bookCopy = await this.bookCopyRepository.findOne({ serial_number: serial_number })
 
