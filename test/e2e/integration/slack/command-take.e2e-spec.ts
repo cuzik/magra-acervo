@@ -102,7 +102,7 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
     expect(reservations).toEqual(0);
   });
 
-  xit('should return erros message when try take an unavailable book', async () => {
+  it('should return erros message when try take an unavailable book', async () => {
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'ciclaninho.42',
@@ -121,11 +121,17 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
       .send(data)
       .expect(200);
 
-    expect(text).toEqual('Este livro já está com usuario.one.');
+    expect(text).toEqual('Este livro já está com usuario.one');
 
     [_, reservations] = await getRepository(Reservation).findAndCount({user_name: data.user_name});
 
     expect(reservations).toEqual(0);
+  });
+
+  afterEach(async () => {
+    await getRepository(Reservation).delete({});
+    await getRepository(BookCopy).delete({});
+    await getRepository(Book).delete({});
   });
 
   afterAll(async () => {
