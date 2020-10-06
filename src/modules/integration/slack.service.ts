@@ -22,6 +22,10 @@ export class SlackService {
       return this.helpCommand()
     }
 
+    if (command_name == 'list') {
+      return this.dashboardCommand()
+    }
+
     if (command_name == 'take') {
       return this.takeService.run(user_name, command)
     }
@@ -39,5 +43,13 @@ export class SlackService {
 
   private helpCommand(): string {
     return 'comando em construção.';
+  }
+
+  private dashboardCommand(): string {
+    return `Você pode converir os livros em [dashboard](${this.dashboardLink()}).`;
+  }
+
+  private dashboardLink(): string {
+    return process.env.DASHBOARD_LINK || '';
   }
 }

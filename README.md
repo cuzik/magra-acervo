@@ -41,6 +41,7 @@ $ yarn test:cov
 | Command | params | Description | Usage |
 |---------|---|---|---|
 | help | - | return a list of command and usage | /acervo help |
+| list | - | return a link that contains the dashboard with a list of all book and copies | /acervo list |
 | take | serial_number | registry when you take a book | /acervo take <serial_number> |
 | return | serial_number | registry when you return a book | /acervo return <serial_number> |
 | consult | serial_number | consult if a book is avaliable | /acervo return <serial_number> |
