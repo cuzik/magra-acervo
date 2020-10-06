@@ -18,27 +18,20 @@ export class SlackService {
   public async runCommand(user_name: string, command :string): Promise<string> {
     const command_name = command.split(' ')[0];
 
-    if (command_name == 'help') {
-      return this.helpCommand()
+    switch(command_name) {
+      case 'help':
+        return this.helpCommand()
+      case 'list':
+        return this.dashboardCommand()
+      case 'take':
+        return this.takeService.run(user_name, command)
+      case 'return':
+        return this.returnService.run(user_name, command)
+      case 'consult':
+        return this.consultService.run(command)
+      default:
+        return `${user_name} o comando /${command_name} não é valido.`;
     }
-
-    if (command_name == 'list') {
-      return this.dashboardCommand()
-    }
-
-    if (command_name == 'take') {
-      return this.takeService.run(user_name, command)
-    }
-
-    if (command_name == 'return') {
-      return this.returnService.run(user_name, command)
-    }
-
-    if (command_name == 'consult') {
-      return this.consultService.run(command)
-    }
-
-    return `${user_name} o comando /${command_name} não é valido.`;
   }
 
   private helpCommand(): string {
