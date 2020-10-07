@@ -11,25 +11,32 @@ import { ReservationStatus } from '../../../../src/modules/reservation/reservati
 
 describe('SlackController (e2e) POST /integration/slack with return command', () => {
   let app: INestApplication;
-  let data: { user_name: string, text: string };
+  let data: { user_name: string; text: string };
 
   const createBookCopy = async (serial_number: string): Promise<void> => {
-    const book = await getRepository(Book).save(
-      {title: 'Um livro qualquer', author: 'Fulano'}
-    );
+    const book = await getRepository(Book).save({
+      title: 'Um livro qualquer',
+      author: 'Fulano',
+    });
 
-    await getRepository(BookCopy).save(
-      {serial_number: serial_number, book: book}
-    );
+    await getRepository(BookCopy).save({
+      serial_number: serial_number,
+      book: book,
+    });
   };
 
-  const createReservation = async (user_name: string, serial_number: string): Promise<void> => {
-    const bookCopy = await getRepository(BookCopy).findOne({serial_number: serial_number});
+  const createReservation = async (
+    user_name: string,
+    serial_number: string,
+  ): Promise<void> => {
+    const bookCopy = await getRepository(BookCopy).findOne({
+      serial_number: serial_number,
+    });
 
     await getRepository(Reservation).save({
       user_name: user_name,
       bookCopy: bookCopy,
-      status: ReservationStatus.pick_up
+      status: ReservationStatus.pick_up,
     });
   };
 
@@ -45,7 +52,7 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
   it('should return correct error message when pass invalid serial number', async () => {
     data = {
       user_name: 'fulaninho.42',
-      text: `return A8kf0-33`
+      text: `return A8kf0-33`,
     };
 
     const { text } = await request(app.getHttpServer())
@@ -59,10 +66,12 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
   it('should return erros message when try return command without serial_number', async () => {
     data = {
       user_name: 'ciclaninho.42',
-      text: 'return'
+      text: 'return',
     };
 
-    let reservations = await getRepository(Reservation).count({user_name: data.user_name});
+    let reservations = await getRepository(Reservation).count({
+      user_name: data.user_name,
+    });
 
     expect(reservations).toEqual(0);
 
@@ -73,7 +82,9 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
 
     expect(text).toEqual('Comando inválido veja mais em `/acervo help`.');
 
-    reservations = await getRepository(Reservation).count({user_name: data.user_name});
+    reservations = await getRepository(Reservation).count({
+      user_name: data.user_name,
+    });
 
     expect(reservations).toEqual(0);
   });
@@ -82,7 +93,7 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'ciclaninho.42',
-      text: `return ${serial_number}`
+      text: `return ${serial_number}`,
     };
 
     await createBookCopy(serial_number);
@@ -95,7 +106,9 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
 
     expect(text).toEqual('ciclaninho.42 você realizou a devolução do livro.');
 
-    const reservation = await getRepository(Reservation).findOne({user_name: data.user_name});
+    const reservation = await getRepository(Reservation).findOne({
+      user_name: data.user_name,
+    });
 
     expect(reservation.status).toEqual(ReservationStatus.returned);
   });
@@ -104,7 +117,7 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'ciclaninho.42',
-      text: `return ${serial_number}`
+      text: `return ${serial_number}`,
     };
 
     await createBookCopy(serial_number);
@@ -121,7 +134,7 @@ describe('SlackController (e2e) POST /integration/slack with return command', ()
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'ciclaninho.42',
-      text: `return ${serial_number}`
+      text: `return ${serial_number}`,
     };
 
     await createBookCopy(serial_number);

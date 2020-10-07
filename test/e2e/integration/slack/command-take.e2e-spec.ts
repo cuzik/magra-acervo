@@ -11,25 +11,32 @@ import { ReservationStatus } from '../../../../src/modules/reservation/reservati
 
 describe('SlackController (e2e) POST /integration/slack with take command', () => {
   let app: INestApplication;
-  let data: { user_name: string, text: string };
+  let data: { user_name: string; text: string };
 
   const createBookCopy = async (serial_number: string): Promise<void> => {
-    const book = await getRepository(Book).save(
-      {title: 'Um livro qualquer', author: 'Fulano'}
-    );
+    const book = await getRepository(Book).save({
+      title: 'Um livro qualquer',
+      author: 'Fulano',
+    });
 
-    await getRepository(BookCopy).save(
-      {serial_number: serial_number, book: book}
-    );
+    await getRepository(BookCopy).save({
+      serial_number: serial_number,
+      book: book,
+    });
   };
 
-  const createReservation = async (user_name: string, serial_number: string): Promise<void> => {
-    const bookCopy = await getRepository(BookCopy).findOne({serial_number: serial_number});
+  const createReservation = async (
+    user_name: string,
+    serial_number: string,
+  ): Promise<void> => {
+    const bookCopy = await getRepository(BookCopy).findOne({
+      serial_number: serial_number,
+    });
 
     await getRepository(Reservation).save({
       user_name: user_name,
       bookCopy: bookCopy,
-      status: ReservationStatus.pick_up
+      status: ReservationStatus.pick_up,
     });
   };
 
@@ -45,7 +52,7 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
   it('should return correct error message when pass invalid serial number', async () => {
     data = {
       user_name: 'fulaninho.42',
-      text: `take A8kf0-33`
+      text: `take A8kf0-33`,
     };
 
     const { text } = await request(app.getHttpServer())
@@ -60,12 +67,14 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'fulaninho.42',
-      text: `take ${serial_number}`
+      text: `take ${serial_number}`,
     };
 
     await createBookCopy(serial_number);
 
-    let [_, reservations] = await getRepository(Reservation).findAndCount({user_name: data.user_name});
+    let [_, reservations] = await getRepository(Reservation).findAndCount({
+      user_name: data.user_name,
+    });
 
     expect(reservations).toEqual(0);
 
@@ -76,17 +85,21 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
 
     expect(text).toEqual('fulaninho.42 você realizou a retirada do livro.');
 
-    [_, reservations] = await getRepository(Reservation).findAndCount({user_name: data.user_name});
+    [_, reservations] = await getRepository(Reservation).findAndCount({
+      user_name: data.user_name,
+    });
     expect(reservations).toEqual(1);
   });
 
   it('should return erros message when try take command without serial_number', async () => {
     data = {
       user_name: 'ciclaninho.42',
-      text: 'take'
+      text: 'take',
     };
 
-    let reservations = await getRepository(Reservation).count({user_name: data.user_name});
+    let reservations = await getRepository(Reservation).count({
+      user_name: data.user_name,
+    });
 
     expect(reservations).toEqual(0);
 
@@ -97,7 +110,9 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
 
     expect(text).toEqual('Comando inválido veja mais em `/acervo help`.');
 
-    reservations = await getRepository(Reservation).count({user_name: data.user_name});
+    reservations = await getRepository(Reservation).count({
+      user_name: data.user_name,
+    });
 
     expect(reservations).toEqual(0);
   });
@@ -106,13 +121,15 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
     const serial_number = '9PK7JS7';
     data = {
       user_name: 'ciclaninho.42',
-      text: `take ${serial_number}`
+      text: `take ${serial_number}`,
     };
 
     await createBookCopy(serial_number);
     await createReservation('usuario.one', serial_number);
 
-    let reservations = await getRepository(Reservation).count({user_name: data.user_name});
+    let reservations = await getRepository(Reservation).count({
+      user_name: data.user_name,
+    });
 
     expect(reservations).toEqual(0);
 
@@ -123,7 +140,9 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
 
     expect(text).toEqual('Este livro já está com usuario.one');
 
-    reservations = await getRepository(Reservation).count({user_name: data.user_name});
+    reservations = await getRepository(Reservation).count({
+      user_name: data.user_name,
+    });
 
     expect(reservations).toEqual(0);
   });

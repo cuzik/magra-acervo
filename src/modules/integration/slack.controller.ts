@@ -3,21 +3,19 @@ import { SlackService } from './slack.service';
 
 @Controller('integration/slack')
 export class SlackController {
-  constructor(
-    private slackService: SlackService
-  ) {}
+  constructor(private slackService: SlackService) {}
 
   @Post()
   @HttpCode(200)
   public async actionBot(
-    @Body() body : { user_name: string, text: string }
+    @Body() body: { user_name: string; text: string },
   ): Promise<string> {
-    const is_valid = this.slackService.validateCommand(body.text)
+    const is_valid = this.slackService.validateCommand(body.text);
 
-    if(!is_valid) {
+    if (!is_valid) {
       return 'Comando inválido veja mais em `/acervo help`';
     }
 
-    return this.slackService.runCommand(body.user_name, body.text)
+    return this.slackService.runCommand(body.user_name, body.text);
   }
 }

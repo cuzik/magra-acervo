@@ -45,3 +45,10 @@ $ yarn test:cov
 | take | serial_number | registry when you take a book | /acervo take <serial_number> |
 | return | serial_number | registry when you return a book | /acervo return <serial_number> |
 | consult | serial_number | consult if a book is avaliable | /acervo return <serial_number> |
+| add | title author [serial_number, serial_number, ...] | add a book and copies | /acervo add <title> <author> [ <list_of_serial_numbers> ] |
+
+## Improves
+
+- command `add` need more validation
+- crate command `remove` book ou copybook
+- create unit tests (?)

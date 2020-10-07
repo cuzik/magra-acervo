@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { AddService } from './add/add.service';
 import { ConsultService } from './consult/consult.service';
 import { ReturnService } from './return/return.service';
 import { TakeService } from './take/take.service';
@@ -9,26 +10,29 @@ export class SlackService {
     private takeService: TakeService,
     private returnService: ReturnService,
     private consultService: ConsultService,
+    private addService: AddService,
   ) {}
 
-  public validateCommand(command :string): boolean {
+  public validateCommand(command: string): boolean {
     return command != '';
   }
 
-  public async runCommand(user_name: string, command :string): Promise<string> {
+  public async runCommand(user_name: string, command: string): Promise<string> {
     const command_name = command.split(' ')[0];
 
-    switch(command_name) {
+    switch (command_name) {
       case 'help':
-        return this.helpCommand()
+        return this.helpCommand();
       case 'list':
-        return this.dashboardCommand()
+        return this.dashboardCommand();
       case 'take':
-        return this.takeService.run(user_name, command)
+        return this.takeService.run(user_name, command);
       case 'return':
-        return this.returnService.run(user_name, command)
+        return this.returnService.run(user_name, command);
       case 'consult':
-        return this.consultService.run(command)
+        return this.consultService.run(command);
+      case 'add':
+        return this.addService.run(command);
       default:
         return `${user_name} o comando /${command_name} não é valido.`;
     }
@@ -42,7 +46,8 @@ export class SlackService {
       | list | - | return a link that contains the dashboard with a list of all book and copies | /acervo list |
       | take | serial_number | registry when you take a book | /acervo take <serial_number> |
       | return | serial_number | registry when you return a book | /acervo return <serial_number> |
-      | consult | serial_number | consult if a book is avaliable | /acervo return <serial_number> |`;
+      | consult | serial_number | consult if a book is avaliable | /acervo return <serial_number> |
+      | add | title author [serial_number, serial_number, ...] | add a book and copies | /acervo add <title> <author> [ <list_of_serial_numbers> ] |`;
   }
 
   private dashboardCommand(): string {
