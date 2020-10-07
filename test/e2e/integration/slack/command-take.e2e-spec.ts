@@ -1,13 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { IntegrationModule } from '../../../../src/modules/integration/integration.module';
 import * as request from 'supertest';
-import { TypeOrmModuleTest } from '../../../helpers/database';
-import { Book } from '../../../../src/modules/book/book.entity';
 import { getRepository } from 'typeorm';
 import { BookCopy } from '../../../../src/modules/book/book-copy.entity';
+import { Book } from '../../../../src/modules/book/book.entity';
+import { IntegrationModule } from '../../../../src/modules/integration/integration.module';
 import { Reservation } from '../../../../src/modules/reservation/reservation.entity';
 import { ReservationStatus } from '../../../../src/modules/reservation/reservation.interface';
+import { TypeOrmModuleTest } from '../../../helpers/database';
 
 describe('SlackController (e2e) POST /integration/slack with take command', () => {
   let app: INestApplication;
@@ -20,8 +20,8 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
     });
 
     await getRepository(BookCopy).save({
-      serial_number: serial_number,
-      book: book,
+      serial_number,
+      book,
     });
   };
 
@@ -30,12 +30,12 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
     serial_number: string,
   ): Promise<void> => {
     const bookCopy = await getRepository(BookCopy).findOne({
-      serial_number: serial_number,
+      serial_number,
     });
 
     await getRepository(Reservation).save({
-      user_name: user_name,
-      bookCopy: bookCopy,
+      user_name,
+      bookCopy,
       status: ReservationStatus.pick_up,
     });
   };
@@ -72,7 +72,7 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
 
     await createBookCopy(serial_number);
 
-    let [_, reservations] = await getRepository(Reservation).findAndCount({
+    let reservations = await getRepository(Reservation).count({
       user_name: data.user_name,
     });
 
@@ -85,7 +85,7 @@ describe('SlackController (e2e) POST /integration/slack with take command', () =
 
     expect(text).toEqual('fulaninho.42 você realizou a retirada do livro.');
 
-    [_, reservations] = await getRepository(Reservation).findAndCount({
+    reservations = await getRepository(Reservation).count({
       user_name: data.user_name,
     });
     expect(reservations).toEqual(1);

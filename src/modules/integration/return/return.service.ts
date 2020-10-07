@@ -21,7 +21,7 @@ export class ReturnService {
 
     const serial_number = command.replace('return ', '');
     const bookCopy = await this.bookCopyRepository.findOne({
-      serial_number: serial_number,
+      serial_number,
     });
 
     if (bookCopy == null) {
@@ -29,7 +29,7 @@ export class ReturnService {
     }
 
     const reservation = await this.reservationRepository.findOne({
-      bookCopy: bookCopy,
+      bookCopy,
       status: ReservationStatus.pick_up,
     });
 

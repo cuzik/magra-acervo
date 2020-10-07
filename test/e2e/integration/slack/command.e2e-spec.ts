@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
-import { IntegrationModule } from '../../../../src/modules/integration/integration.module';
 import * as request from 'supertest';
+import { IntegrationModule } from '../../../../src/modules/integration/integration.module';
 import { TypeOrmModuleTest } from '../../../helpers/database';
 
 describe('SlackController (e2e)', () => {
