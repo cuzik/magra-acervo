@@ -1,5 +1,7 @@
 ## Description
 
+  ![Continuous Integration - API](https://github.com/cuzik/magra-acervo/workflows/Continuous%20Integration%20-%20API/badge.svg)
+
   Um sistema simples para organização e automação de estoque/livraria.
 
 ## Installation

@@ -1,0 +1,64 @@
+name: Continuous Integration - API
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Read .nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+        id: nvm
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Check code style
+        run: yarn format:check
+
+      - name: Check TypeScript
+        run: yarn build
+
+      - name: Check build entrypoint path
+        run: test -f dist/src/main.js
+
+      - name: Lint
+        run: yarn lint
+
+      # - name: Test
+      #   run: |
+      #     yarn test
+  e2e:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Read .nvmrc
+        run: echo ::set-output name=NVMRC::$(cat .nvmrc)
+        id: nvm
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '${{ steps.nvm.outputs.NVMRC }}'
+
+      - name: Initialize the database service
+        run: yarn dev:up
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: E2E tests
+        run: |
+          yarn test:e2e
